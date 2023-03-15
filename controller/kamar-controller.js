@@ -15,21 +15,40 @@ exports.getAllKamar = async (request, response) => {
 };
 
 exports.findKamar = async (request, response) => {
-  let keyword = request.body.keyword;
-  let kamars = await kamarModel.findAll({
-    where: {
-      [Op.or]: [
-        { tipeKamarId: { [Op.substring]: keyword } }, //keyword = sesuai dengan yg diketikkan di postman
-        { nomor_kamar: { [Op.substring]: keyword } },
-      ],
-    },
-  });
-  return response.json({
-    success: true,
-    data: kamars,
-    message: "All rooms have been loaded",
-  });
-};
+
+  try{
+      let params = {
+          nomor_kamar : request.body.nomor_kamar
+      }
+
+      console.log(params.nomor_kamar)
+      try{
+          const results = await kamarModel.findAll({
+              where : params
+          })
+          if (results.length === 0) {
+              return response.status(404).json({
+                success: false,
+                message: 'Data tidak ditemukan'
+              });
+            }
+          return response.json({
+              result : results
+          })
+          // const result = await sequelize.query(
+          //     `Select * from kamars"`
+          // );
+      }catch(err){
+          response.json({
+              message: "jihan dong",
+              error: err
+
+          })
+      }
+  }catch(err){
+      response.json(err)
+  }
+}
 
 exports.addKamar = async (request, response) => {
   let newKamar = {

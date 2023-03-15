@@ -25,10 +25,10 @@ exports.getAllPemesanan = async (request, response) => {
 };
 
 exports.findPemesanan = async (request, response) => {
-  let status = request.body.status;
+  let status_pemesanan = request.body.status_pemesanan;
   let pemesanans = await pemesananModel.findAll({
     where: {
-      [Op.or]: [{ status: { [Op.substring]: status } }],
+      [Op.or]: [{ status_pemesanan: { [Op.substring]: status_pemesanan } }],
     },
   });
   return response.json({
@@ -69,7 +69,7 @@ exports.addPemesanan = async (request, response) => {
       nomor_pemesanan: request.body.nomor_pemesanan,
       nama_pemesan: request.body.nama_pemesan,
       email_pemesan: request.body.email_pemesan,
-      tgl_pemesananF: request.body.tgl_pemesanan,
+      tgl_pemesanan: request.body.tgl_pemesanan,
       tgl_check_in: request.body.tgl_check_in,
       tgl_check_out: request.body.tgl_check_out,
       nama_tamu: request.body.nama_tamu,

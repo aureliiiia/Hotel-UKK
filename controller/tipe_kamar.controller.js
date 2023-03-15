@@ -1,41 +1,41 @@
-const tipeKamarModel = require(`../models/index`).tipe_kamar
+const tipeKamarModel = require(`../models/index`).tipe_kamar;
 
-const Op = require(`sequelize`).Op
+const Op = require(`sequelize`).Op;
 
 /** load library 'path' and 'filestream' */
-const path = require(`path`)
-const fs = require(`fs`)
+const path = require(`path`);
+const fs = require(`fs`);
 
-const upload = require(`./upload-photo`).single(`foto`)
+const upload = require(`./upload-photo`).single(`foto`);
 
 exports.getAlltipeKamar = async (request, response) => {
-  let tipe_kamars = await tipeKamarModel.findAll() /** call findAll() to get all data */
+  let tipe_kamars =
+    await tipeKamarModel.findAll(); /** call findAll() to get all data */
   return response.json({
     success: true,
     data: tipe_kamars,
-    message: `All tipe kamar have been loaded`
-  })
-}
+    message: `All tipe kamar have been loaded`,
+  });
+};
 
 exports.findtipeKamar = async (request, response) => {
-  let nama_tipe_kamar = request.body.nama_tipe_kamar
-  let harga = request.body.harga
+  let nama_tipe_kamar = request.body.nama_tipe_kamar;
+  let harga = request.body.harga;
 
   let tipe_kamars = await tipeKamarModel.findAll({
     where: {
       [Op.or]: [
         { nama_tipe_kamar: { [Op.substring]: nama_tipe_kamar } },
         { harga: { [Op.substring]: harga } },
-      ]
-    }
-  })
+      ],
+    },
+  });
   return response.json({
     success: true,
     data: tipe_kamars,
-    message: `All tipe kamar have been loaded`
-  })
-
-}
+    message: `All tipe kamar have been loaded`,
+  });
+};
 
 exports.addTipeKamar = (request, response) => {
   /** run function upload */
@@ -56,7 +56,10 @@ exports.addTipeKamar = (request, response) => {
       deskripsi: request.body.deskripsi,
       foto: request.file.filename,
     };
-    console.log(newTipeKamar);
+
+    console.log(`nama_tipe_kamar: ` + newTipeKamar.nama_tipe_kamar);
+
+    // console.log(newTipeKamar);
     tipeKamarModel
       .create(newTipeKamar)
       .then((result) => {
@@ -76,7 +79,6 @@ exports.addTipeKamar = (request, response) => {
 };
 
 exports.updateTipeKamar = (request, response) => {
-
   upload(request, response, async (error) => {
     /** check if there are errorwhen upload */
     if (error) {
@@ -93,51 +95,52 @@ exports.updateTipeKamar = (request, response) => {
       nama_tipe_kamar: request.body.nama_tipe_kamar,
       harga: request.body.harga,
       deskripsi: request.body.deskripsi,
-      foto: request.file.foto
-
-    }
+      foto: request.file.foto,
+    };
 
     /** define id member that will be update */
-    let idTipeKamar = request.params.id
+    let idTipeKamar = request.params.id;
 
     /** execute update data based on defined id member */
-    tipeKamarModel.update(dataTipeKamar, { where: { id: idTipeKamar } })
-      .then(result => {
+    tipeKamarModel
+      .update(dataTipeKamar, { where: { id: idTipeKamar } })
+      .then((result) => {
         /** if update's process success */
         return response.json({
           success: true,
-          message: `Data tipe kamar has been updated`
-        })
+          message: `Data tipe kamar has been updated`,
+        });
       })
-      .catch(error => {
+      .catch((error) => {
         /** if update's process fail */
         return response.json({
           success: false,
-          message: error.message
-        })
-      })
+          message: error.message,
+        });
+      });
   });
-}
+};
 
 /** create function for delete data */
 exports.deleteTipeKamar = (request, response) => {
   /** define id member that will be update */
-  let idTipeKamar = request.params.id
+  let idTipeKamar = request.params.id;
 
   /** execute delete data based on defined id member */
-  tipeKamarModel.destroy({ where: { id: idTipeKamar } })
-    .then(result => {
+  tipeKamarModel
+    .destroy({ where: { id: idTipeKamar } })
+    .then((result) => {
       /** if update's process success */
       return response.json({
         success: true,
-        message: `Data tipe kamar has been updated`
-      })
+        message: `Data tipe kamar has been updated`,
+      });
     })
-    .catch(error => {
+    .catch((error) => {
       /** if update's process fail */
       return response.json({
         success: false,
-        message: error.message
-      })
-    })
-}
+        message: error.message,
+      });
+    });
+};
